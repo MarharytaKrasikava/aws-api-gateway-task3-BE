@@ -12,9 +12,9 @@
 # Happy Coding!
 
 service: product-service
-# app and org for use with dashboard.serverless.com
-#app: your-app-name
-#org: your-org-name
+
+plugins:
+  - serverless-webpack
 
 # You can pin your service to only deploy with a specific Serverless version
 # Check out our docs for more details
@@ -58,14 +58,14 @@ provider:
 
 functions:
   getProductsList:
-    handler: getProductsList.getProductsList
+    handler: handler.getProductsList
     events:
       - http:
           path: products
           method: get
           cors: true
   getProductsById:
-    handler: getProductsById.getProductsById
+    handler: handler.getProductsById
     events:
       - http:
           path: products/{id}
