@@ -14,7 +14,9 @@
 service: product-service
 
 plugins:
+  - serverless-auto-swagger
   - serverless-webpack
+  - serverless-offline
 
 # You can pin your service to only deploy with a specific Serverless version
 # Check out our docs for more details
@@ -23,8 +25,17 @@ frameworkVersion: '3'
 provider:
   name: aws
   runtime: nodejs12.x
-  stage: dev
   region: eu-west-1
+  stage: dev
+  httpApi:
+    cors:
+      allowedOrigins:
+        - https://dv0irgcfxah3p.cloudfront.net
+      allowedHeaders:
+        - Content-Type
+        - Authorization
+      allowedMethods:
+        - GET
 
 # you can add statements to the Lambda function's IAM Role here
 #  iam:
@@ -64,6 +75,11 @@ functions:
           path: products
           method: get
           cors: true
+          responses:
+            200:
+              description: 'Successful product list response'
+              bodyType: 'ProductList'
+              responseParameters:
   getProductsById:
     handler: handler.getProductsById
     events:
@@ -75,6 +91,10 @@ functions:
               paths:
                 id: true
           cors: true
+          responses:
+            200:
+              description: 'Successful Product response'
+              bodyType: 'Product'
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
 #    Check the event documentation for details

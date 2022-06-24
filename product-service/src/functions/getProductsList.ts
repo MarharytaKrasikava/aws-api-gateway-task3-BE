@@ -1,4 +1,4 @@
-import productList from '../stubs/productList';
+import productList from '../../stubs/productList';
 
 export default async () => {
   return {

@@ -12,7 +12,10 @@
     "noImplicitAny": true,
     "preserveConstEnums": true,
     "declaration": true,
-    "rootDir": ".",
+    "rootDir": "."
+  },
+  "resolve": {
+    "extensions": [".mjs", ".json", ".ts", ".js"]
   },
   "include": ["src/**/*.ts", "serverless.ts"],
   "exclude": [
@@ -21,5 +24,5 @@
     ".webpack/**/*",
     "_warmup/**/*",
     ".vscode/**/*"
-  ],
+  ]
 }
