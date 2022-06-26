@@ -20,10 +20,7 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": "Successful product list response",
-            "schema": {
-              "$ref": "#/definitions/ProductList"
-            }
+            "description": "200 response"
           }
         }
       }
@@ -49,10 +46,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Successful Product response",
-            "schema": {
-              "$ref": "#/definitions/Product"
-            }
+            "description": "200 response"
           }
         }
       }
