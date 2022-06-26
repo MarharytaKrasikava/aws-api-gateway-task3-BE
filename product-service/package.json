@@ -1,0 +1,36 @@
+{
+  "name": "product-service",
+  "version": "1.0.0",
+  "description": "My webpack project",
+  "main": "index.js",
+  "scripts": {
+    "getProductsList": "sls invoke local --function getProductsList",
+    "build": "webpack --mode=production --node-env=production",
+    "build:dev": "webpack --mode=development",
+    "build:prod": "webpack --mode=production --node-env=production",
+    "watch": "webpack --watch"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.18.2",
+    "@babel/preset-env": "^7.18.2",
+    "@types/node": "^17.0.42",
+    "@types/webpack": "^5.28.0",
+    "@webpack-cli/generators": "^2.5.0",
+    "babel-loader": "^8.2.5",
+    "clean-webpack-plugin": "^4.0.0",
+    "prettier": "^2.6.2",
+    "serverless-auto-swagger": "^2.6.0",
+    "serverless-offline": "^8.8.0",
+    "serverless-webpack": "^5.7.1",
+    "ts-loader": "^9.3.0",
+    "tslint": "^5.11.0",
+    "tslint-config-airbnb": "^5.11.2",
+    "typedoc": "^0.5.10",
+    "typescript": "^4.7.3",
+    "webpack": "^5.73.0",
+    "webpack-cli": "^4.10.0"
+  }
+}
