@@ -26,6 +26,36 @@
             }
           }
         }
+      },
+      "post": {
+        "summary": "createNewProduct",
+        "description": "",
+        "operationId": "createNewProduct.post.products",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Body required in the request",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Product"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Successful Product response",
+            "schema": {
+              "$ref": "#/definitions/ProductList"
+            }
+          }
+        }
       }
     },
     "/products/{id}": {
@@ -53,6 +83,9 @@
             "schema": {
               "$ref": "#/definitions/Product"
             }
+          },
+          "404": {
+            "description": "Not found"
           }
         }
       }

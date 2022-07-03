@@ -1,12 +1,11 @@
-"use strict";
 exports.handler = async () => {
-    return {
-        statusCode: 200,
-        body: swaggerUI,
-        headers: {
-            'content-type': 'text/html',
-        },
-    };
+  return {
+    statusCode: 200,
+    body: swaggerUI,
+    headers: {
+      'content-type': 'text/html',
+    },
+  };
 };
 const swaggerUI = `<!DOCTYPE html>
 <html lang="en">

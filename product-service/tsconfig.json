@@ -12,7 +12,8 @@
     "noImplicitAny": true,
     "preserveConstEnums": true,
     "declaration": true,
-    "rootDir": "."
+    "rootDir": ".",
+    "baseUrl": "src"
   },
   "resolve": {
     "extensions": [".mjs", ".json", ".ts", ".js"]
