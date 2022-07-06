@@ -31,26 +31,20 @@ provider:
       statements:
         - Effect: Allow
           Action:
-            - s3:ListBucket
-          Resource:
-            - arn:aws:s3:::${self:custom.client.bucketName}
-        - Effect: Allow
+            - s3:GetObject
+          Resource: 'arn:aws:s3:::${self:custom.client.bucketName}'
+        - Effect: 'Allow'
           Action:
             - s3:*
-          Resource:
-            - arn:aws:s3:::${self:custom.client.bucketName}/*
+          Resource: 'arn:aws:s3:::${self:custom.client.bucketName}/*'
 
 functions:
   importProductsFile:
     handler: handler.importProductsFile
     events:
-      - http:
+      - httpApi:
           method: get
-          path: import
-          request:
-            parameters:
-              querystrings:
-                name: true
+          path: /dev/import
   importFileParser:
     handler: handler.importFileParser
     events:
