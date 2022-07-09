@@ -13,9 +13,11 @@ export default async (event: any) => {
   try {
     for (const record of event.Records) {
       const recordKey = record.s3.object.key;
+      const pattern = /^.*\.(csv)$/;
 
-      if (!recordKey.endsWith('.csv')) {
-        throw Error('Only .csv extensions allowed!');
+      if (!pattern.test(recordKey)) {
+        console.log('error');
+        throw new Error('Only .csv extensions allowed!');
       }
 
       const getCommand = new GetObjectCommand({
