@@ -37,6 +37,15 @@ provider:
           Action:
             - s3:*
           Resource: 'arn:aws:s3:::${self:custom.client.bucketName}/*'
+  environment:
+    SQS_URL:
+      Ref: ''
+  resources:
+    Resources:
+      SQSQueue:
+        Type: 'AWS::SQS::Queue'
+        Properties:
+          QueueName: sqs-products-queue
 
 functions:
   importProductsFile:
@@ -54,3 +63,9 @@ functions:
           rules:
             - prefix: uploaded/
           existing: true
+  catalogBatchProcess:
+    handler: handler.catalogBatchProcess
+    events:
+      - sqs:
+          batchSize: 5
+          arn: ''
