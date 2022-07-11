@@ -7,6 +7,9 @@ plugins:
 custom:
   client:
     bucketName: uploaded-product-files
+  bundle:
+    ignorePackages:
+      - pg-native
 
 frameworkVersion: '3'
 
@@ -32,20 +35,24 @@ provider:
         - Effect: Allow
           Action:
             - s3:GetObject
-          Resource: 'arn:aws:s3:::${self:custom.client.bucketName}'
-        - Effect: 'Allow'
+          Resource: arn:aws:s3:::${self:custom.client.bucketName}
+        - Effect: Allow
           Action:
             - s3:*
-          Resource: 'arn:aws:s3:::${self:custom.client.bucketName}/*'
+          Resource: arn:aws:s3:::${self:custom.client.bucketName}/*
+        - Effect: Allow
+          Action: sqs:*
+          Resource:
+            - Fn::GetAtt: [SQSQueue, Arn]
   environment:
     SQS_URL:
-      Ref: ''
-  resources:
-    Resources:
-      SQSQueue:
-        Type: 'AWS::SQS::Queue'
-        Properties:
-          QueueName: sqs-products-queue
+      Ref: SQSQueue
+resources:
+  Resources:
+    SQSQueue:
+      Type: 'AWS::SQS::Queue'
+      Properties:
+        QueueName: sqs-products-queue
 
 functions:
   importProductsFile:
@@ -68,4 +75,7 @@ functions:
     events:
       - sqs:
           batchSize: 5
-          arn: ''
+          arn:
+            Fn::GetAtt:
+              - SQSQueue
+              - Arn

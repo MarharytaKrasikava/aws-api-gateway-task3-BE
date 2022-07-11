@@ -5,8 +5,9 @@ import {
   DeleteObjectCommand,
   GetObjectCommand,
 } from '@aws-sdk/client-s3';
-import { SQSClient, AddPermissionCommand } from '@aws-sdk/client-sqs';
+import { SQSClient, SendMessageCommand } from '@aws-sdk/client-sqs';
 import { BUCKET_NAME } from '../constants';
+import { Product } from '../models/products';
 
 export default async (event: any) => {
   const s3Client = new S3Client({ region: 'eu-west-1' });
@@ -29,18 +30,15 @@ export default async (event: any) => {
       const results: any = [];
 
       file.Body.pipe(csvParser())
-        .on('data', async (parsedRecord: []) => {
-          results.push(parsedRecord);
-          // pass a record to SQS
+        .on('data', async (parsedRecord: Product) => {
           const client = new SQSClient({ region: 'eu-west-1' });
-          const { USER_ID, SQS_URL } = process.env;
-          const command = new AddPermissionCommand({
-            Actions: ['SendMessage'],
+          const { SQS_URL } = process.env;
+          const command = new SendMessageCommand({
             QueueUrl: SQS_URL,
-            Label: 'SendProductMessage',
-            AWSAccountIds: [USER_ID],
+            MessageBody: JSON.stringify(parsedRecord),
           });
           const data = await client.send(command);
+          console.log('successfully sent:', data);
         })
         .on('end', async () => {
           console.log('results:', results);
