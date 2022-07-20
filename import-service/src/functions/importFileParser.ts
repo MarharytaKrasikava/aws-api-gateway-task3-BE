@@ -6,11 +6,11 @@ import {
   GetObjectCommand,
 } from '@aws-sdk/client-s3';
 import { SQSClient, SendMessageCommand } from '@aws-sdk/client-sqs';
-import { BUCKET_NAME } from '../constants';
+import { BUCKET_NAME, REGION } from '../constants';
 import { Product } from '../models/products';
 
 export default async (event: any) => {
-  const s3Client = new S3Client({ region: 'eu-west-1' });
+  const s3Client = new S3Client({ region: REGION });
 
   try {
     for (const record of event.Records) {

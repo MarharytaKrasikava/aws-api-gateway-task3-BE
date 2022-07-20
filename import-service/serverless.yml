@@ -44,15 +44,37 @@ provider:
           Action: sqs:*
           Resource:
             - Fn::GetAtt: [SQSQueue, Arn]
+        - Effect: Allow
+          Action: sns:*
+          Resource:
+            - Ref: SNSTopic
   environment:
     SQS_URL:
       Ref: SQSQueue
+    SNS_ARN:
+      Ref: SNSTopic
+    PG_HOST: shoproductsinstance.cnu2heyxae3k.eu-west-1.rds.amazonaws.com
+    PG_PORT: 5432
+    PG_DATABASE: shopProducts
+    PG_USERNAME: productmaster
+    PG_PASSWORD: 1shmani0
 resources:
   Resources:
     SQSQueue:
-      Type: 'AWS::SQS::Queue'
+      Type: AWS::SQS::Queue
       Properties:
         QueueName: sqs-products-queue
+    SNSTopic:
+      Type: AWS::SNS::Topic
+      Properties:
+        TopicName: createProductTopic
+    SNSSubscription:
+      Type: AWS::SNS::Subscription
+      Properties:
+        Endpoint: atiragram7@gmail.com
+        Protocol: email
+        TopicArn:
+          Ref: SNSTopic
 
 functions:
   importProductsFile:

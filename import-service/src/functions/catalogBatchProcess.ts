@@ -1,11 +1,13 @@
 import { Client } from 'pg';
-import { dbOptions, HEADERS } from './../constants';
+import { dbOptions, HEADERS, REGION } from './../constants';
+import { PublishCommand, SNSClient } from '@aws-sdk/client-sns';
 
 export default async (event: any) => {
   // receive SQS messages and add to the database
   // send a email through SNS topic "createProductTopic"
-  const client = new Client(dbOptions);
-  await client.connect();
+  const pgClient = new Client(dbOptions);
+  const snsClient = new SNSClient({ region: REGION });
+  await pgClient.connect();
   console.log(event.Records);
 
   try {
@@ -14,9 +16,9 @@ export default async (event: any) => {
 
       console.log(title, description, price, count);
 
-      client.query('BEGIN');
+      pgClient.query('BEGIN');
 
-      await client.query(
+      await pgClient.query(
         `WITH ins1 as (INSERT INTO products (title, description, price)
             VALUES ('${title}', '${description}', ${price})
             returning id AS new_product_id)
@@ -26,22 +28,29 @@ export default async (event: any) => {
 
       console.log('inserted');
 
-      await client.query('COMMIT');
-      // send a email through SNS topic "createProductTopic"
+      await pgClient.query('COMMIT');
     }
 
+    // send a email through SNS topic "createProductTopic"
+    await snsClient.send(
+      new PublishCommand({
+        TopicArn: process.env.SNS_ARN,
+        Message: `New ${event.Records.length} products added to the products table`
+      })
+    );
+
     return {
-      statusCode: 201,
-      headers: HEADERS,
+      statusCode: 200,
+      headers: HEADERS
     };
   } catch (err) {
-    client.query('ROLLBACK');
+    pgClient.query('ROLLBACK');
 
     return {
       statusCode: 500,
-      message: err?.message || 'Unable to add a batch',
+      message: err?.message || 'Unable to add a batch'
     };
   } finally {
-    await client.end();
+    await pgClient.end();
   }
 };
