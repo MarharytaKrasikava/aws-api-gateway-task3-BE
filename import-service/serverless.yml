@@ -44,15 +44,32 @@ provider:
           Action: sqs:*
           Resource:
             - Fn::GetAtt: [SQSQueue, Arn]
+        - Effect: Allow
+          Action: sns:*
+          Resource:
+            - Ref: SNSTopic
   environment:
     SQS_URL:
       Ref: SQSQueue
+    SNS_ARN:
+      Ref: SNSTopic
 resources:
   Resources:
     SQSQueue:
-      Type: 'AWS::SQS::Queue'
+      Type: AWS::SQS::Queue
       Properties:
         QueueName: sqs-products-queue
+    SNSTopic:
+      Type: AWS::SNS::Topic
+      Properties:
+        TopicName: createProductTopic
+    SNSSubscription:
+      Type: AWS::SNS::Subscription
+      Properties:
+        Endpoint: atiragram7@gmail.com
+        Protocol: email
+        TopicArn:
+          Ref: SNSTopic
 
 functions:
   importProductsFile:
