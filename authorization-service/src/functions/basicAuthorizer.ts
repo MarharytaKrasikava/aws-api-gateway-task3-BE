@@ -17,7 +17,7 @@ export default async (event: any, ctx: any, callBack: any) => {
     console.log(`login: ${login}, pass: ${password}`);
 
     const correctPassword = process.env[login];
-    const effect = password === correctPassword ? 'Allow' : 'Deny';
+    const effect = password && password === correctPassword ? 'Allow' : 'Deny';
 
     const policy = generatePolicy(encodedCreds, event.routeArn, effect);
 
