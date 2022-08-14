@@ -1,9 +1,8 @@
-import express from 'express';
-import axios from 'axios';
-import dotenv from 'dotenv';
+const express = require('express');
+const axios = require('axios');
 
 const app = express();
-dotenv.config();
+require('dotenv').config();
 const PORT = process.env.PORT || 8080;
 
 app.use(express.json());
@@ -34,7 +33,7 @@ app.all('/*', async (request, response) => {
       const recipientResponse = await axios(axiosConfig);
       console.log('recipient response', recipientResponse);
       response.json(recipientResponse.data);
-    } catch (error: any) {
+    } catch (error) {
       console.log('recipient request error:', JSON.stringify(error));
 
       if (error.response) {
