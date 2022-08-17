@@ -12,19 +12,27 @@ app.all('/*', async (request, response) => {
   console.log('method:', request.method);
   console.log('body:', request.body);
 
-  const recipient = request.originalUrl.split('/')[1];
+  const recipientPostfixStartIndex = request.originalUrl.lastIndexOf('/') + 1;
+  const recipientWithQuery = request.originalUrl.substring(
+    recipientPostfixStartIndex
+  );
+  const recipient = recipientWithQuery.split('?')[0];
   console.log('recipient:', recipient);
 
   const recipientUrl = process.env[recipient];
   console.log('recipient Url:', recipientUrl);
 
   if (recipientUrl) {
+    const { authorization } = request.headers;
     const axiosConfig = {
       method: request.method,
       url:
         recipient === 'cart'
           ? recipientUrl
           : `${recipientUrl}${request.originalUrl}`,
+      ...(authorization && {
+        headers: { authorization }
+      }),
       ...(Object.keys(request.body || {}).length && { data: request.body })
     };
     console.log('axiosConfig:', axiosConfig);
@@ -42,7 +50,7 @@ app.all('/*', async (request, response) => {
       }
     }
   } else {
-    response.status(502).json({ error: 'Cannot proceed resuest' });
+    response.status(502).json({ error: 'Cannot proceed request' });
   }
 });
 
